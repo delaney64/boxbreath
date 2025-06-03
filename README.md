@@ -2,7 +2,7 @@
 
 A beautiful, meditative breathing exercise app built with React. Guide your breath through the calming 4-4-4-4 box breathing pattern with smooth, synchronized animations.
 
-![Box Breathing Demo](https://via.placeholder.com/800x400/1e293b/ffffff?text=Box+Breathing+App+Demo)
+
 
 ## ✨ Features
 
@@ -32,7 +32,7 @@ This creates a "box" pattern that helps calm the nervous system, reduce stress, 
 
 1. **Download the standalone file:**
    - Right-click on [`box-breathing.html`](box-breathing.html) and "Save As" 
-   - Or visit the [GitHub Pages demo](https://delaney64.github.io/boxbreath/)
+
 
 2. **Open in your browser:**
    - Double-click the downloaded `box-breathing.html` file
