@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Breathing App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const BoxBreathing = () => {
+            const [phase, setPhase] = useState(0);
+            const [timer, setTimer] = useState(4);
+            const [isStarted, setIsStarted] = useState(false);
+
+            const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+            const phaseInstructions = [
+                'Breathe in slowly...',
+                'Hold your breath',
+                'Breathe out slowly...',
+                'Hold empty'
+            ];
+
+            useEffect(() => {
+                if (!isStarted) return;
+                
+                const interval = setInterval(() => {
+                    setTimer((prevTimer) => {
+                        if (prevTimer === 1) {
+                            setPhase((prevPhase) => (prevPhase + 1) % 4);
+                            return 4;
+                        }
+                        return prevTimer - 1;
+                    });
+                }, 1000);
+
+                return () => clearInterval(interval);
+            }, [isStarted]);
+
+            const getBreathingStyles = () => {
+                if (!isStarted) {
+                    return {
+                        transform: 'scale(1)',
+                        backgroundColor: 'rgba(156, 163, 175, 0.08)',
+                        borderColor: 'rgba(156, 163, 175, 0.4)',
+                        boxShadow: '0 0 40px rgba(156, 163, 175, 0.1)',
+                        transition: 'all 0.3s ease-out'
+                    };
+                }
+                
+                const isAnimating = phase === 0 || phase === 2;
+                const transitionDuration = isAnimating ? '4s' : '0.3s';
+                
+                switch (phase) {
+                    case 0: // Inhale - expand
+                        return {
+                            transform: 'scale(1.5)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                            borderColor: 'rgba(59, 130, 246, 0.4)',
+                            boxShadow: '0 0 60px rgba(59, 130, 246, 0.2), inset 0 0 40px rgba(59, 130, 246, 0.1)',
+                            transition: `all ${transitionDuration} cubic-bezier(0.25, 0.1, 0.25, 1)`
+                        };
+                    case 1: // Hold (expanded)
+                        return {
+                            transform: 'scale(1.5)',
+                            backgroundColor: 'rgba(34, 197, 94, 0.08)',
+                            borderColor: 'rgba(34, 197, 94, 0.4)',
+                            boxShadow: '0 0 60px rgba(34, 197, 94, 0.2), inset 0 0 40px rgba(34, 197, 94, 0.1)',
+                            transition: `all ${transitionDuration} ease-out`
+                        };
+                    case 2: // Exhale - contract
+                        return {
+                            transform: 'scale(0.7)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                            borderColor: 'rgba(239, 68, 68, 0.4)',
+                            boxShadow: '0 0 30px rgba(239, 68, 68, 0.15), inset 0 0 20px rgba(239, 68, 68, 0.1)',
+                            transition: `all ${transitionDuration} cubic-bezier(0.25, 0.1, 0.25, 1)`
+                        };
+                    case 3: // Hold (contracted)
+                        return {
+                            transform: 'scale(0.7)',
+                            backgroundColor: 'rgba(234, 179, 8, 0.08)',
+                            borderColor: 'rgba(234, 179, 8, 0.4)',
+                            boxShadow: '0 0 30px rgba(234, 179, 8, 0.15), inset 0 0 20px rgba(234, 179, 8, 0.1)',
+                            transition: `all ${transitionDuration} ease-out`
+                        };
+                    default:
+                        return {
+                            transform: 'scale(1)',
+                            backgroundColor: 'rgba(156, 163, 175, 0.08)',
+                            borderColor: 'rgba(156, 163, 175, 0.4)',
+                            boxShadow: '0 0 40px rgba(156, 163, 175, 0.1)',
+                            transition: `all ${transitionDuration} ease-out`
+                        };
+                }
+            };
+
+            const getTimerColor = () => {
+                switch (phase) {
+                    case 0: return 'text-blue-600';
+                    case 1: return 'text-green-600';
+                    case 2: return 'text-red-600';
+                    case 3: return 'text-yellow-600';
+                    default: return 'text-gray-600';
+                }
+            };
+
+            const getAuraStyles = () => {
+                if (!isStarted) {
+                    return {
+                        transform: 'scale(1.2)',
+                        opacity: 0.2,
+                        transition: 'all 0.3s ease-out'
+                    };
+                }
+                
+                const isAnimating = phase === 0 || phase === 2;
+                const transitionDuration = isAnimating ? '4s' : '0.3s';
+                
+                return {
+                    transform: phase === 0 ? 'scale(1.8)' : phase === 2 ? 'scale(1.2)' : 'scale(1.5)',
+                    opacity: phase === 0 ? 0.6 : phase === 2 ? 0.3 : 0.4,
+                    transition: `all ${transitionDuration} cubic-bezier(0.25, 0.1, 0.25, 1)`
+                };
+            };
+
+            const handleStart = () => {
+                setIsStarted(true);
+            };
+
+            return React.createElement('div', {
+                className: "min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 flex flex-col items-center justify-center p-8 text-white"
+            }, [
+                // Header
+                React.createElement('div', {
+                    key: 'header',
+                    className: "text-center mb-16"
+                }, [
+                    React.createElement('h1', {
+                        key: 'title',
+                        className: "text-5xl font-thin text-white mb-3 tracking-wide"
+                    }, "Box Breathing"),
+                    React.createElement('p', {
+                        key: 'subtitle',
+                        className: "text-slate-300 text-xl font-light"
+                    }, "4-4-4-4 rhythm for mindful breathing")
+                ]),
+
+                // Main breathing visualization
+                React.createElement('div', {
+                    key: 'visualization',
+                    className: "relative mb-16"
+                }, [
+                    // Outer aura
+                    React.createElement('div', {
+                        key: 'aura',
+                        className: "absolute inset-0 w-96 h-96 rounded-full",
+                        style: {
+                            background: `radial-gradient(circle, ${getBreathingStyles().borderColor}40 0%, transparent 60%)`,
+                            ...getAuraStyles()
+                        }
+                    }),
+
+                    // Main breathing circle
+                    React.createElement('div', {
+                        key: 'circle-container',
+                        className: "relative w-96 h-96 flex items-center justify-center"
+                    }, 
+                        React.createElement('div', {
+                            className: "w-80 h-80 rounded-full border backdrop-blur-sm relative overflow-hidden",
+                            style: getBreathingStyles()
+                        }, [
+                            // Subtle inner rings
+                            React.createElement('div', {
+                                key: 'ring1',
+                                className: "absolute inset-6 rounded-full border border-white border-opacity-10"
+                            }),
+                            React.createElement('div', {
+                                key: 'ring2',
+                                className: "absolute inset-12 rounded-full border border-white border-opacity-5"
+                            }),
+
+                            // Floating particles
+                            React.createElement('div', {
+                                key: 'particles',
+                                className: "absolute inset-0 rounded-full opacity-20"
+                            }, [
+                                React.createElement('div', {
+                                    key: 'p1',
+                                    className: "absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-pulse"
+                                }),
+                                React.createElement('div', {
+                                    key: 'p2',
+                                    className: "absolute top-3/4 right-1/4 w-1 h-1 bg-white rounded-full animate-pulse",
+                                    style: { animationDelay: '1s' }
+                                }),
+                                React.createElement('div', {
+                                    key: 'p3',
+                                    className: "absolute bottom-1/4 left-3/4 w-1.5 h-1.5 bg-white rounded-full animate-pulse",
+                                    style: { animationDelay: '2s' }
+                                })
+                            ]),
+
+                            // Timer/Button display
+                            React.createElement('div', {
+                                key: 'center',
+                                className: "absolute inset-0 flex items-center justify-center"
+                            }, 
+                                !isStarted ? 
+                                    React.createElement('button', {
+                                        onClick: handleStart,
+                                        className: "px-8 py-4 bg-white bg-opacity-10 hover:bg-opacity-20 border border-white border-opacity-30 rounded-full text-2xl font-light text-white transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+                                    }, "Start Breathing") :
+                                    React.createElement('span', {
+                                        className: `text-7xl font-extralight ${getTimerColor()} transition-colors duration-500 tracking-wider`
+                                    }, timer)
+                            )
+                        ])
+                    )
+                ]),
+
+                // Instructions
+                React.createElement('div', {
+                    key: 'instructions',
+                    className: "text-center space-y-4"
+                }, 
+                    isStarted ? [
+                        React.createElement('div', {
+                            key: 'phase',
+                            className: `text-3xl font-light transition-colors duration-500 ${getTimerColor()} tracking-wide`
+                        }, phases[phase]),
+                        React.createElement('div', {
+                            key: 'instruction',
+                            className: "text-slate-400 text-xl font-light"
+                        }, phaseInstructions[phase])
+                    ] : [
+                        React.createElement('div', {
+                            key: 'ready',
+                            className: "text-3xl font-light text-slate-300 tracking-wide"
+                        }, "Ready to Begin"),
+                        React.createElement('div', {
+                            key: 'start-instruction',
+                            className: "text-slate-400 text-xl font-light"
+                        }, "Click the button above to start your breathing session")
+                    ]
+                ),
+
+                // Phase progress indicator
+                isStarted && React.createElement('div', {
+                    key: 'progress',
+                    className: "mt-12 flex space-x-3"
+                }, 
+                    phases.map((phaseName, index) => 
+                        React.createElement('div', {
+                            key: index,
+                            className: "flex flex-col items-center space-y-2"
+                        }, [
+                            React.createElement('div', {
+                                key: 'dot',
+                                className: `w-4 h-4 rounded-full transition-all duration-500 ${
+                                    index === phase ? 'scale-125 opacity-100' : 'scale-100 opacity-40'
+                                }`,
+                                style: {
+                                    backgroundColor: index === phase ? getBreathingStyles().borderColor : 'rgba(255, 255, 255, 0.3)'
+                                }
+                            }),
+                            React.createElement('span', {
+                                key: 'label',
+                                className: `text-xs font-light transition-opacity duration-500 ${
+                                    index === phase ? 'opacity-100' : 'opacity-50'
+                                }`
+                            }, phaseName)
+                        ])
+                    )
+                )
+            ]);
+        };
+
+        ReactDOM.render(React.createElement(BoxBreathing), document.getElementById('root'));
+    </script>
+</body>
+</html>
