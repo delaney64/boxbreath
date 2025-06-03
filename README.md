@@ -31,11 +31,11 @@ This creates a "box" pattern that helps calm the nervous system, reduce stress, 
 **Easiest way to try it out:**
 
 1. **Download the standalone file:**
-   - Right-click on [`index.html`](index.html) and "Save As" 
-   - Or visit the [GitHub Pages demo](https://yourusername.github.io/box-breathing-app/)
+   - Right-click on [`box-breathing.html`](box-breathing.html) and "Save As" 
+   - Or visit the [GitHub Pages demo](https://delaney64.github.io/boxbreath/)
 
 2. **Open in your browser:**
-   - Double-click the downloaded `index.html` file
+   - Double-click the downloaded `box-breathing.html` file
    - Or drag it into any web browser
    - Works offline once downloaded!
 
@@ -51,8 +51,8 @@ This creates a "box" pattern that helps calm the nervous system, reduce stress, 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/box-breathing-app.git
-cd box-breathing-app
+git clone https://github.com/delaney64/boxbreath.git
+cd boxbreath
 ```
 
 2. Install dependencies:
@@ -148,12 +148,12 @@ const PHASE_COLORS = {
 
 ### Option 1: GitHub Pages (Standalone Version)
 
-The `index.html` file can be deployed directly to GitHub Pages:
+The `box-breathing.html` file can be deployed directly to GitHub Pages:
 
-1. Push the `index.html` file to your repository
+1. Push the `box-breathing.html` file to your repository
 2. Go to Settings → Pages in your GitHub repo
 3. Select "Deploy from a branch" and choose `main`
-4. Your app will be live at `https://yourusername.github.io/repository-name`
+4. Your app will be live at `https://delaney64.github.io/boxbreath`
 
 ### Option 2: Build and Deploy (React Version)
 
@@ -204,8 +204,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you have any questions or run into issues:
 
-- Open an [issue](https://github.com/yourusername/box-breathing-app/issues)
-- Check out the [discussions](https://github.com/yourusername/box-breathing-app/discussions)
+- Open an [issue](https://github.com/delaney64/boxbreath/issues)
+- Check out the [discussions](https://github.com/delaney64/boxbreath/discussions)
 - Star ⭐ the repo if you find it helpful!
 
 ---
